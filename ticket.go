@@ -1,58 +1,19 @@
 package gofreshdesk
 
-type source int
-type status int
-type priority int
+import (
+	"fmt"
 
-const (
-	Email source = 1 + iota
-	Portal
-	Phone
-	Forum
-	Twitter
-	Facebook
-	Chat
+	"github.com/TobiEiss/goFreshdesk/models"
 )
-
-const (
-	Open status = 2 + iota
-	Pending
-	Resolved
-	Closed
-)
-
-const (
-	Low priority = 1 + iota
-	Medium
-	High
-	Urgent
-)
-
-// Ticket represents a single helpdesk ticket
-type Ticket struct {
-	ProductID   int      `json:"product_id"`
-	GroupID     int      `json:"group_id"`
-	Email       string   `json:"email"`
-	Name        string   `json:"name"`
-	Subject     string   `json:"subject"`
-	Description string   `json:"description"`
-	Type        string   `json:"type"`
-	Status      status   `json:"status"`
-	Priority    priority `json:"priority"`
-	Source      source   `json:"source"`
-}
-
-type TicketResponse struct {
-	ID int `json:"id,omitempty"`
-}
 
 // CreateTicket posts a new Ticket to freshdesk
-func (freshdesk *Freshdesk) CreateTicket(ticket Ticket) (ticketResponse TicketResponse, err error) {
+func (freshdesk *Freshdesk) CreateTicket(ticket models.Ticket) (ticketResponse models.TicketResponse, err error) {
 	err = freshdesk.query(&ticketResponse, "/api/v2/tickets", ticket, nil)
 	return ticketResponse, err
 }
 
-// func (freshdesk *Freshdesk) GetAnswer() (reponse interface{}, err error) {
-// 	freshdesk.query("/api/v2/tickets")
-// 	return
-// }
+// GetConversations fetch all converations
+func (freshdesk *Freshdesk) GetConversations(ticketID string) (response models.Conversation, err error) {
+	freshdesk.query(&response, fmt.Sprintf("/api/v2/tickets/%s/conversations", ticketID), nil, nil)
+	return
+}
