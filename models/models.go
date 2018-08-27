@@ -49,11 +49,11 @@ type TicketResponse struct {
 	ID int `json:"id,omitempty"`
 }
 
-// Conversation holds a bunch of answers
-type Conversation []Answer
+// Conversations holds a bunch of conversations
+type Conversations []Conversation
 
-// Answer is one piece of a conversation
-type Answer struct {
+// Conversation is one piece of a conversation
+type Conversation struct {
 	BodyText     string        `json:"body_text"`
 	Body         string        `json:"body"`
 	ID           int           `json:"id"`

@@ -13,7 +13,7 @@ func (freshdesk *Freshdesk) CreateTicket(ticket models.Ticket) (ticketResponse m
 }
 
 // GetConversations fetch all converations
-func (freshdesk *Freshdesk) GetConversations(ticketID string) (response models.Conversation, err error) {
+func (freshdesk *Freshdesk) GetConversations(ticketID string) (response models.Conversations, err error) {
 	freshdesk.query(&response, fmt.Sprintf("/api/v2/tickets/%s/conversations", ticketID), nil, nil)
 	return
 }
