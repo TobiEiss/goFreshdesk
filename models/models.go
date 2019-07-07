@@ -32,16 +32,17 @@ const (
 
 // Ticket represents a single helpdesk ticket
 type Ticket struct {
-	ProductID   int      `json:"product_id"`
-	GroupID     int      `json:"group_id"`
-	Email       string   `json:"email"`
-	Name        string   `json:"name"`
-	Subject     string   `json:"subject"`
-	Description string   `json:"description"`
-	Type        string   `json:"type"`
-	Status      status   `json:"status"`
-	Priority    priority `json:"priority"`
-	Source      source   `json:"source"`
+	ProductID    int               `json:"product_id"`
+	GroupID      int               `json:"group_id"`
+	Email        string            `json:"email"`
+	Name         string            `json:"name"`
+	Subject      string            `json:"subject"`
+	Description  string            `json:"description"`
+	Type         string            `json:"type"`
+	Status       status            `json:"status"`
+	Priority     priority          `json:"priority"`
+	Source       source            `json:"source"`
+	CustomFields map[string]string `json:"custom_fields"`
 }
 
 // TicketResponse response for "createTicket"

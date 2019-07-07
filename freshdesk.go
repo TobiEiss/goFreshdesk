@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"log"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -18,7 +19,7 @@ type Freshdesk struct {
 }
 
 // query the api
-func (freshdesk *Freshdesk) query(typ interface{}, route string, body interface{}, header map[string]string) error {
+func (freshdesk *Freshdesk) query(typ interface{}, route string, requestBody interface{}, header map[string]string) error {
 	// create httpURL
 	httpURL := fmt.Sprintf("https://%s.freshdesk.com%s", freshdesk.Domain, route)
 
@@ -28,8 +29,8 @@ func (freshdesk *Freshdesk) query(typ interface{}, route string, body interface{
 
 	// build request
 	request, err := func() (*http.Request, error) {
-		if body != nil {
-			bodyBytes, err := json.Marshal(body)
+		if requestBody != nil {
+			bodyBytes, err := json.Marshal(requestBody)
 			if err != nil {
 				return nil, err
 			}
@@ -57,9 +58,12 @@ func (freshdesk *Freshdesk) query(typ interface{}, route string, body interface{
 			return err
 		}
 
-		log.Println(response.StatusCode)
-
 		defer response.Body.Close()
+
+		if response.StatusCode > 299 {
+			all, _ := ioutil.ReadAll(response.Body)
+			return errors.New(fmt.Sprintf("calling %s resulted in status %d. error message: %s", httpURL, response.StatusCode, string(all)))
+		}
 
 		decoder := json.NewDecoder(response.Body)
 		decoder.UseNumber()
